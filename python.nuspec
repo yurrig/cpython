@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>python</id>
+    <version>3.12.0</version>
+    <title>Python</title>
+    <authors>Python Software Foundation</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <!--license type="file">tools\LICENSE.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl-->
+    <icon>images\python.png</icon>
+    <projectUrl>https://www.python.org/</projectUrl>
+    <iconUrl>https://www.python.org/static/favicon.ico</iconUrl>
+    <description>Installs 64-bit Python for use in build scenarios.</description>
+    <tags>python</tags>
+    <repository type="git" url="https://github.com/Python/CPython.git" commit="f3909b8" />
+  </metadata>
+  <files>
+    <file src="images\*" target="images"/>
+    <file src="python.props" target="build\native"/>
+    <file src="Include\**\*" target="tools\include" />
+    <file src="PC\pyconfig.h" target="tools\include" />
+    <file src="Lib\**\*" target="tools\Lib" />
+    <file src="Tools\**\*" target="tools\Tools" />
+
+    <file src="PCBuild\amd64\*.lib" target="tools\libs" />
+    <file src="PCBuild\amd64\*.dll"  exclude="**\*_d.*" target="tools\DLLs" />
+    <file src="PCBuild\amd64\*.pyd"  exclude="**\*_d.*" target="tools\DLLs" />
+    <file src="PCBuild\amd64\*.pdb"  exclude="**\*_d.*" target="tools\DLLs" />
+    <file src="PCBuild\amd64\python312.dll" target="tools" />
+    <file src="PCBuild\amd64\python312.pdb" target="tools" />
+    <file src="PCBuild\amd64\python.exe" target="tools" />
+    <file src="PCBuild\amd64\python.pdb" target="tools" />
+    <file src="PCBuild\amd64\venvlauncher.exe" target="tools" />
+    <file src="PCBuild\amd64\venvlauncher.pdb" target="tools" />
+
+    <file src="PCBuild\amd64\*_d.dll"  target="tools.dbg\DLLs" />
+    <file src="PCBuild\amd64\*_d.pyd"  target="tools.dbg\DLLs" />
+    <file src="PCBuild\amd64\*_d.pdb"  target="tools.dbg\DLLs" />
+    <file src="PCBuild\amd64\python312_d.dll" target="tools.dbg" />
+    <file src="PCBuild\amd64\python312_d.pdb" target="tools.dbg" />
+    <file src="PCBuild\amd64\python_d.exe" target="tools.dbg" />
+    <file src="PCBuild\amd64\python_d.pdb" target="tools.dbg" />
+    <file src="PCBuild\amd64\venvlauncher_d.exe" target="tools.dbg" />
+    <file src="PCBuild\amd64\venvlauncher_d.pdb" target="tools.dbg" />
+  </files>
+</package>

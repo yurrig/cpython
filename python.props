@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="$(Platform) == 'X64'">
+    <PythonHome Condition="$(PythonHome) == ''">$([System.IO.Path]::GetFullPath("$(MSBuildThisFileDirectory)\..\..\tools"))</PythonHome>
+    <PythonInclude>$(PythonHome)\include</PythonInclude>
+    <PythonLibs>$(PythonHome)\libs</PythonLibs>
+    <PythonTag>3.12</PythonTag>
+    <PythonVersion>3.12.0</PythonVersion>
+
+    <IncludePythonExe Condition="$(IncludePythonExe) == ''">true</IncludePythonExe>
+    <IncludeDistutils Condition="$(IncludeDistutils) == ''">false</IncludeDistutils>
+    <IncludeLib2To3 Condition="$(IncludeLib2To3) == ''">false</IncludeLib2To3>
+    <IncludeVEnv Condition="$(IncludeVEnv) == ''">false</IncludeVEnv>
+
+    <GetPythonRuntimeFilesDependsOn>_GetPythonRuntimeFilesDependsOn311_None;$(GetPythonRuntimeFilesDependsOn)</GetPythonRuntimeFilesDependsOn>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="$(Platform) == 'X64'">
+    <ClCompile>
+      <PreprocessorDefinitions>PYTHON_PACKAGE_PATH=R"($(MSBuildThisFileDirectory))";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(PythonInclude);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(PythonLibs);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <Target Name="GetPythonRuntimeFiles" Returns="@(PythonRuntime)" DependsOnTargets="$(GetPythonRuntimeFilesDependsOn)" />
+
+  <Target Name="_GetPythonRuntimeFilesDependsOn311_None" Returns="@(PythonRuntime)">
+    <ItemGroup>
+      <_PythonRuntimeExe Include="$(PythonHome)\python*.dll" />
+      <_PythonRuntimeExe Include="$(PythonHome)\python*.exe" Condition="$(IncludePythonExe) == 'true'" />
+      <_PythonRuntimeExe>
+        <Link>%(Filename)%(Extension)</Link>
+      </_PythonRuntimeExe>
+      <_PythonRuntimeDlls Include="$(PythonHome)\DLLs\*.pyd" />
+      <_PythonRuntimeDlls Include="$(PythonHome)\DLLs\*.dll" />
+      <_PythonRuntimeDlls>
+        <Link>DLLs\%(Filename)%(Extension)</Link>
+      </_PythonRuntimeDlls>
+      <_PythonRuntimeLib Include="$(PythonHome)\Lib\**\*" Exclude="$(PythonHome)\Lib\**\*.pyc;$(PythonHome)\Lib\site-packages\**\*" />
+      <_PythonRuntimeLib Remove="$(PythonHome)\Lib\distutils\**\*" Condition="$(IncludeDistutils) != 'true'" />
+      <_PythonRuntimeLib Remove="$(PythonHome)\Lib\lib2to3\**\*" Condition="$(IncludeLib2To3) != 'true'" />
+      <_PythonRuntimeLib Remove="$(PythonHome)\Lib\ensurepip\**\*" Condition="$(IncludeVEnv) != 'true'" />
+      <_PythonRuntimeLib Remove="$(PythonHome)\Lib\venv\**\*" Condition="$(IncludeVEnv) != 'true'" />
+      <_PythonRuntimeLib>
+        <Link>Lib\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      </_PythonRuntimeLib>
+      <PythonRuntime Include="@(_PythonRuntimeExe);@(_PythonRuntimeDlls);@(_PythonRuntimeLib)" />
+    </ItemGroup>
+
+    <Message Importance="low" Text="Collected Python runtime from $(PythonHome):%0D%0A@(PythonRuntime->'  %(Link)','%0D%0A')" />
+  </Target>
+
+  <Target Name="Python_CopyFiles" BeforeTargets="Build">
+    <!--ItemGroup>
+        <PythonDLLs Include="$(PythonHome)\DLLs\**\*" />
+        <PythonLibs Include="$(PythonHome)\Lib\**\*" />
+        <PythonDebug Include="$(PythonHome)\..\tools.dbg\**\*" />
+        <PythonRelease Include="$(PythonHome)\..\tools\*" />
+        <PythonDebugDll Include="$(PythonHome)\..\tools.dbg\python311_d.dll" />
+        <PythonReleaseDll Include="$(PythonHome)\..\tools\python311.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PythonDLLs)" DestinationFolder="$(OutDir)python\DLLs\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(PythonLibs)" DestinationFolder="$(OutDir)python\Lib\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(Configuration)=='Debug'" SourceFiles="@(PythonDebug)" DestinationFolder="$(OutDir)python\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(Configuration)=='Release'" SourceFiles="@(PythonRelease)" DestinationFolder="$(OutDir)python\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(Configuration)=='Debug'" SourceFiles="@(PythonDebugDll)" DestinationFolder="$(OutDir)%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(Configuration)=='Release'" SourceFiles="@(PythonReleaseDll)" DestinationFolder="$(OutDir)%(RecursiveDir)" SkipUnchangedFiles="true"/-->
+    <Exec Command="ROBOCOPY &quot;$(PythonHome)\DLLs&quot; &quot;$(OutDir)python\DLLs&quot; /S >NUL" IgnoreExitCode="true"/>
+    <Exec Command="ROBOCOPY &quot;$(PythonHome)\Lib&quot; &quot;$(OutDir)python\Lib&quot; /S >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(Configuration)=='Debug'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools.dbg&quot; &quot;$(OutDir)python&quot; >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(Configuration)=='Release'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools&quot; &quot;$(OutDir)python&quot; >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(Configuration)=='Debug'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools.dbg&quot; &quot;$(OutDir).&quot; python312_d.dll python312_d.pdb >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(Configuration)=='Release'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools&quot; &quot;$(OutDir).&quot; python312.dll python312.pdb >NUL" IgnoreExitCode="true"/>
+  </Target>
+</Project>

@@ -17,7 +17,7 @@
   </metadata>
   <files>
     <file src="images\*" target="images"/>
-    <file src="python.props" target="build\native"/>
+    <file src="python.targets" target="build\native"/>
     <file src="Include\**\*" target="tools\include" />
     <file src="PC\pyconfig.h" target="tools\include" />
     <file src="Lib\**\*" target="tools\Lib" />

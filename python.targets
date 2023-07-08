@@ -64,15 +64,15 @@
     </ItemGroup>
     <Copy SourceFiles="@(PythonDLLs)" DestinationFolder="$(OutDir)python\DLLs\%(RecursiveDir)" SkipUnchangedFiles="true"/>
     <Copy SourceFiles="@(PythonLibs)" DestinationFolder="$(OutDir)python\Lib\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy Condition="$(Configuration)=='Debug'" SourceFiles="@(PythonDebug)" DestinationFolder="$(OutDir)python\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy Condition="$(Configuration)=='Release'" SourceFiles="@(PythonRelease)" DestinationFolder="$(OutDir)python\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy Condition="$(Configuration)=='Debug'" SourceFiles="@(PythonDebugDll)" DestinationFolder="$(OutDir)%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy Condition="$(Configuration)=='Release'" SourceFiles="@(PythonReleaseDll)" DestinationFolder="$(OutDir)%(RecursiveDir)" SkipUnchangedFiles="true"/-->
+    <Copy Condition="$(ConfigurationPurpose)=='Debug'" SourceFiles="@(PythonDebug)" DestinationFolder="$(OutDir)python\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(ConfigurationPurpose)=='Release'" SourceFiles="@(PythonRelease)" DestinationFolder="$(OutDir)python\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(ConfigurationPurpose)=='Debug'" SourceFiles="@(PythonDebugDll)" DestinationFolder="$(OutDir)%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy Condition="$(ConfigurationPurpose)=='Release'" SourceFiles="@(PythonReleaseDll)" DestinationFolder="$(OutDir)%(RecursiveDir)" SkipUnchangedFiles="true"/-->
     <Exec Command="ROBOCOPY &quot;$(PythonHome)\DLLs&quot; &quot;$(OutDir)python\DLLs&quot; /S >NUL" IgnoreExitCode="true"/>
     <Exec Command="ROBOCOPY &quot;$(PythonHome)\Lib&quot; &quot;$(OutDir)python\Lib&quot; /S >NUL" IgnoreExitCode="true"/>
-    <Exec Condition="$(Configuration)=='Debug'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools.dbg&quot; &quot;$(OutDir)python&quot; >NUL" IgnoreExitCode="true"/>
-    <Exec Condition="$(Configuration)=='Release'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools&quot; &quot;$(OutDir)python&quot; >NUL" IgnoreExitCode="true"/>
-    <Exec Condition="$(Configuration)=='Debug'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools.dbg&quot; &quot;$(OutDir).&quot; python312_d.dll python312_d.pdb >NUL" IgnoreExitCode="true"/>
-    <Exec Condition="$(Configuration)=='Release'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools&quot; &quot;$(OutDir).&quot; python312.dll python312.pdb >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(ConfigurationPurpose)=='Debug'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools.dbg&quot; &quot;$(OutDir)python&quot; >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(ConfigurationPurpose)=='Release'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools&quot; &quot;$(OutDir)python&quot; >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(ConfigurationPurpose)=='Debug'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools.dbg&quot; &quot;$(OutDir).&quot; python312_d.dll python312_d.pdb >NUL" IgnoreExitCode="true"/>
+    <Exec Condition="$(ConfigurationPurpose)=='Release'" Command="ROBOCOPY &quot;$(PythonHome)\..\tools&quot; &quot;$(OutDir).&quot; python312.dll python312.pdb >NUL" IgnoreExitCode="true"/>
   </Target>
 </Project>

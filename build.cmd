@@ -6,7 +6,7 @@ call build.bat -d
 title Building Python Release
 call build.bat
 title Done building Python
-cd ..
+cd %~dp0..
 PdbIndexer %DEPS_SOURCE_URL%/cpython
 NuGet.exe pack python.nuspec -OutputDirectory %PACKAGES%\nuget_packages
 popd
